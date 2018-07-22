@@ -4,9 +4,11 @@ import 'package:csv_parser/csv_parser.dart';
 
 class CSVFile {
   final CSVHeader header;
-  final List<CSVRow> rows;
+  List<CSVRow> _rows;
 
-  CSVFile(this.header, this.rows);
+  List<CSVRow> get rows => _rows;
+
+  CSVFile(this.header, [this._rows]);
 
   factory CSVFile.fromString(String stringCSVFile) {
     LineSplitter splitter = const LineSplitter();
@@ -35,10 +37,23 @@ class CSVFile {
   String export() {
     String csvString = header.export();
 
-    for (CSVRow row in rows) {
-      csvString += "\n${row.export()}";
+    if (rows != null) {
+      for (CSVRow row in rows) {
+        csvString += "\n${row.export()}";
+      }
     }
 
     return csvString;
+  }
+
+  void add(CSVRow newRow) {
+    _initRows();
+    rows.add(newRow);
+  }
+
+  void _initRows() {
+    if (rows == null) {
+      _rows = new List<CSVRow>();
+    }
   }
 }

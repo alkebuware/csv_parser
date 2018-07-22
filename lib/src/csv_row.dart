@@ -4,7 +4,7 @@ class CSVRow {
   final List<String> _fields;
   final CSVHeader header;
 
-  CSVRow(this.header, this._fields);
+  CSVRow(this.header, [this._fields]);
 
   CSVRow.fromString(this.header, String fields)
       : this._fields = fields.split(",");
