@@ -1,0 +1,14 @@
+name: csv_parser
+description: A CSV parser library that can easily import and export CSVs.
+# version: 0.0.0
+# homepage: https://github.com/alkebuware/csv_parser
+# author: Tariq <tariq@alkebuware.com>
+
+environment:
+  sdk: '>=2.0.0-dev.68.0 <3.0.0'
+
+#dependencies:
+#  path: ^1.4.1
+
+dev_dependencies:
+  test: ^1.0.0
