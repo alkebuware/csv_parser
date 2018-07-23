@@ -29,14 +29,8 @@ class CSVRow {
 
   List<dynamic> asList() => _fields.toList();
 
-  String export([int start = 0, int end]) {
-    int _end = end ?? _fields.length;
-
-    RangeError.checkValidRange(start, _end, _fields.length);
-
-    return _fields.skip(start)
-        .take(_end - start)
-        .reduce((dynamic row, dynamic field) {
+  String export() {
+    return _fields.reduce((dynamic row, dynamic field) {
       String fieldString = field as String;
       if (fieldString?.contains(',') == true) fieldString = "\"${field}\"";
       if (row == null || row.isEmpty) {

@@ -34,13 +34,19 @@ class CSVFile {
     rows[row] = csvRow;
   }
 
-  String export() {
-    String csvString = header.export();
+  String export({int start = 0, int end, bool includeHeader = true}) {
+    int _end = end ?? rows.length;
+
+    RangeError.checkValidRange(start, _end, rows.length);
+
+    String csvString = (includeHeader) ? header.export() : "";
 
     if (rows != null) {
-      for (CSVRow row in rows) {
+      rows.skip(start)
+          .take(_end - start)
+          .forEach((CSVRow row) {
         csvString += "\n${row.export()}";
-      }
+      });
     }
 
     return csvString;
