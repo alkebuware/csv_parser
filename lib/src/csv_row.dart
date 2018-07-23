@@ -31,6 +31,8 @@ class CSVRow {
 
   String export() {
     return _fields.reduce((dynamic row, dynamic field) {
+      String fieldString = field as String;
+      if (fieldString.contains(',')) fieldString = "\"${field}\"";
       if (row == null || row.isEmpty) {
         row = "${field}";
       } else {
