@@ -7,7 +7,7 @@ class CSVRow {
   CSVRow(this.header, [this._fields]);
 
   CSVRow.fromString(this.header, String fields)
-      : this._fields = fields.split(",");
+      : this._fields = splitRow(fields);
 
   dynamic operator [](String fieldName) {
     int i = header.asList().indexOf(fieldName);
@@ -41,5 +41,38 @@ class CSVRow {
 
       return row;
     });
+  }
+
+  static List<String> splitRow(String row) {
+    List<String> fields = new List<String>();
+
+    int index = 0;
+    while (index < row?.length) {
+      String character = row[index];
+      String field = "";
+      bool inQuote = false;
+
+      if (character == "\"") {
+        inQuote = true;
+        character = row[++index];
+      }
+
+      while ((index < row.length) && (character != "," || inQuote == true)) {
+        character = row[index++];
+        if (character == "\"" && inQuote == false) {
+          throw new FormatException("Field contains unclosed quote.");
+        } else if (character == "\"" && inQuote == true) {
+          inQuote = false;
+        } else if (character == "," && inQuote == false) {
+          break;
+        } else {
+          field += character;
+        }
+      }
+
+      fields.add(field);
+    }
+
+    return fields;
   }
 }

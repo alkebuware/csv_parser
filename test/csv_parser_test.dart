@@ -7,7 +7,9 @@ void main() {
   List<String> headerList;
 
   String rowString;
+  String rowStringQuotes;
   List<dynamic> rowList;
+  List<dynamic> rowListQuotes;
   CSVHeader header;
 
   List<CSVRow> rows;
@@ -19,13 +21,16 @@ void main() {
     headerList = headerString.split(",");
 
     rowString = "field1, 1, 2, field4";
+    rowStringQuotes = "\"field1,field1.2\",3,field7";
     rowList = rowString.split(",");
+    rowListQuotes = CSVRow.splitRow(rowStringQuotes);
     header = new CSVHeader(headerList);
 
     rows = <CSVRow>[
       new CSVRow(header, rowList),
       new CSVRow(header, ["field2", "", "field3"]),
       new CSVRow(header, ["field2", "fidl42", "tariq"]),
+      new CSVRow(header, ["field1,field2", "csv", "row"])
     ];
 
     rowsString = header.export();
@@ -50,6 +55,13 @@ void main() {
           throwsUnsupportedError);
     });
 
+    test("Quotes", () {
+      CSVHeader header = new CSVHeader.fromString(rowStringQuotes);
+      expect(header
+          .asSet()
+          .length, equals(3));
+    });
+
     test("export", () {
       CSVHeader header = new CSVHeader(headerList);
       expect(header.export(), equals(headerString));
@@ -67,6 +79,11 @@ void main() {
       expect(row.asList(), equals(rowList));
     });
 
+    test("fromString constructor quotes", () {
+      CSVRow row = new CSVRow.fromString(header, rowStringQuotes);
+      expect(row.asList(), equals(rowListQuotes));
+    });
+
     test("[] operator", () {
       CSVRow row = new CSVRow(header, rowList);
       expect(row["header1"], equals("field1"));
@@ -81,6 +98,11 @@ void main() {
     test("export", () {
       CSVRow row = new CSVRow(header, rowList);
       expect(row.export(), equals(rowString));
+    });
+
+    test("splitCsvRow", () {
+      List<String> fields = CSVRow.splitRow(rowStringQuotes);
+      expect(fields.length, equals(3));
     });
   });
 

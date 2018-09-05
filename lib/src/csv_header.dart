@@ -1,10 +1,12 @@
+import 'package:csv_parser/src/csv_row.dart';
+
 class CSVHeader {
   final Set<String> _headers;
 
   CSVHeader(List<String> headerFields) : _headers = _fromList(headerFields);
 
   factory CSVHeader.fromString(String headerFieldsString) {
-    return new CSVHeader(headerFieldsString.split(","));
+    return new CSVHeader(CSVRow.splitRow(headerFieldsString));
   }
 
   static Set<String> _fromList(List<String> headerFields) {
@@ -28,6 +30,7 @@ class CSVHeader {
 
   String export() {
     return _headers.reduce((dynamic row, dynamic field) {
+      if (field?.contains(',') == true) field = "\"${field}\"";
       if (row == null || row.isEmpty) {
         row = "${field}";
       } else {
