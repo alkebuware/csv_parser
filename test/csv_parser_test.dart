@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:csv_parser/csv_parser.dart';
 import 'package:test/test.dart';
 
@@ -117,6 +119,17 @@ void main() {
       CSVFile file = new CSVFile.fromString(rowsString);
       expect(file[1].asList(), equals(rows[1].asList()));
       expect(header.asList()[1], equals("header2"));
+    });
+
+    test("fromString constructor file", () {
+      File file = new File("test/test.csv");
+      CSVFile csvFile = CSVFile.fromString(file.readAsStringSync());
+      String formattedFileContent = file.readAsStringSync()
+          .replaceAll("\r\n", "\n")
+          .replaceAll(",\n", "\n");
+      formattedFileContent = formattedFileContent.replaceFirst(
+          ',', "", formattedFileContent.lastIndexOf(','));
+      expect(csvFile.export(), formattedFileContent);
     });
 
     test("[] operator", () {

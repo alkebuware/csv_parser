@@ -45,28 +45,28 @@ class CSVRow {
 
   static List<String> splitRow(String row) {
     List<String> fields = new List<String>();
-
     int index = 0;
-    while (index < row?.length) {
-      String character = row[index];
-      String field = "";
+
+    while (index < row.length) {
+      bool fieldDone = false;
       bool inQuote = false;
+      String field = "";
 
-      if (character == "\"") {
-        inQuote = true;
-        character = row[++index];
-      }
+      while (!fieldDone && index < row.length) {
+        final String character = row[index];
 
-      while ((index < row.length) && (character != "," || inQuote == true)) {
-        character = row[index++];
-        if (character == "\"" && inQuote == false) {
-          throw new FormatException("Field contains unclosed quote.");
+        if (character == "," && inQuote == false) {
+          fieldDone = true;
+          index++;
+        } else if (character == "\"" && inQuote == false) {
+          inQuote = true;
+          index++;
         } else if (character == "\"" && inQuote == true) {
           inQuote = false;
-        } else if (character == "," && inQuote == false) {
-          break;
+          index++;
         } else {
-          field += character;
+          field = "${field}${character}";
+          index++;
         }
       }
 
