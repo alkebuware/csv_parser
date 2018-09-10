@@ -7,7 +7,17 @@ class CSVRow {
   CSVRow(this.header, [this._fields]);
 
   CSVRow.fromString(this.header, String fields)
-      : this._fields = splitRow(fields);
+      : this._fields = splitRow(fields){
+    // pad fields out to header length
+
+    int i = this._fields.length;
+    while (i < this.header
+        .asList()
+        .length) {
+      this._fields.add("");
+      i++;
+    }
+  }
 
   dynamic operator [](String fieldName) {
     int i = header.asList().indexOf(fieldName);

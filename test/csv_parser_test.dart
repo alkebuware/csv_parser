@@ -125,10 +125,7 @@ void main() {
       File file = new File("test/test.csv");
       CSVFile csvFile = CSVFile.fromString(file.readAsStringSync());
       String formattedFileContent = file.readAsStringSync()
-          .replaceAll("\r\n", "\n")
-          .replaceAll(",\n", "\n");
-      formattedFileContent = formattedFileContent.replaceFirst(
-          ',', "", formattedFileContent.lastIndexOf(','));
+          .replaceAll("\r\n", "\n");
       expect(csvFile.export(), formattedFileContent);
     });
 
@@ -153,6 +150,20 @@ void main() {
       CSVFile file = new CSVFile(header, rows);
       String csvFileString = file.export();
       expect(csvFileString, equals(rowsString));
+    });
+
+    test("iterate headers", () {
+      File file = new File("test/test.csv");
+      CSVFile csvFile = CSVFile.fromString(file.readAsStringSync());
+
+      int i = 0;
+      for (CSVRow row in csvFile.rows) {
+        print("row: ${i++}");
+        for (String header in row.header.asList()) {
+          print("header: ${header}");
+          print("row[header]: ${row[header]}");
+        }
+      }
     });
   });
 }
